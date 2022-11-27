@@ -3,44 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class JumpController : MonoBehaviour {
-
+	
 	public float jumpVelocity;
-	public float groundedSkin = 0.05f;
-	public LayerMask mask;
+	public Transform groundCheck;
+	public LayerMask groundLayer;
+	
+	private Rigidbody2D rb;
 
-	bool jumpRequest;
-	bool grounded;
-
-	Vector2 playerSize;
-	Vector2 boxSize;
-
-	void Awake()
+	private void Awake()
 	{
-		playerSize = GetComponent<BoxCollider2D>().size;
-		boxSize = new Vector2(playerSize.x, groundedSkin);
+		rb = GetComponent<Rigidbody2D>();
+	}
+
+	bool IsGrounded()
+	{
+		return Physics2D.OverlapBox(groundCheck.position, new Vector2( 1f, .5f), 0, groundLayer);
 	}
 
 	void Update()
 	{
-		if (Input.GetButtonDown("Jump") && grounded)
+		if (Input.GetButtonDown("Jump") && IsGrounded())
 		{
-			jumpRequest = true;
-		}
-	}
-
-	void FixedUpdate()
-	{
-		if (jumpRequest)
-		{
-			GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
-
-			jumpRequest = false;
-			grounded = false;
-		}
-		else
-		{
-			Vector2 boxCenter = (Vector2)transform.position + Vector2.down * (playerSize.y + boxSize.y) * 0.5f;
-			grounded = (Physics2D.OverlapBox (boxCenter, boxSize, 0f, mask) != null);
+			rb.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
 		}
 	}
 }

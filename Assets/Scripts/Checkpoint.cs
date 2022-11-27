@@ -1,21 +1,15 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour {
-
-	private GameMaster gm;
-
-	void Start()
-	{
-		gm = GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>();
-	}
-
-	void OnTriggerEnter2D(Collider2D other)
-	{
-		if (other.CompareTag("Player"))
-		{
-			gm.lastCheckPointPos = transform.position;
-		}
-	}
+public class CheckPoint : MonoBehaviour
+{
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            CheckPointManager.Instance.lastCheckPointPos = new Vector3(gameObject.transform.position.x,
+                gameObject.transform.position.y + 10, gameObject.transform.position.z);
+        }
+    }
 }

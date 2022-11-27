@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WalkController : MonoBehaviour
-{
+public class WalkController : MonoBehaviour {
     public float speed;
 
     private Rigidbody2D rb;
@@ -16,6 +16,14 @@ public class WalkController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameObject.transform.position = CheckPointManager.Instance.lastCheckPointPos;
+        }
     }
 
     void FixedUpdate()
@@ -41,9 +49,9 @@ public class WalkController : MonoBehaviour
             Flip();
         }
 
-        if (rb.position.y < -75f)
+        if (gameObject.transform.position.y < -125f)
         {
-            FindObjectOfType<GameManager>().EndGame();
+            gameObject.transform.position = CheckPointManager.Instance.lastCheckPointPos;
         }
     }
 
